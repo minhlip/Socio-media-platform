@@ -16,6 +16,7 @@ import { AuthContext } from "../../context/authContext";
 
 const Post = ({ post }) => {
     const [comments, setComments] = useState(false)
+    const [menuOpent, setMenuOpent] = useState(false)
     const { currentUser } = useContext(AuthContext)
     const queryClient = useQueryClient()
     const { isLoading, error, data } = useQuery(['likes', post.Id],
@@ -37,11 +38,21 @@ const Post = ({ post }) => {
     }
   );
 
-
+    const deleteMutation = useMutation(
+      (postId) => {
+        return makeRequest.delete("/posts/"+postId)
+      },{
+        onSuccess: () => {
+          queryClient.invalidateQueries(["posts"])
+        },
+      }
+    )
   const handleLike = () => {
         mutation.mutate(data.includes(currentUser.id));
   };
-
+  const handleDelete = () => {
+    deleteMutation.mutate(post.Id)
+  }
 
   return (
     <div className="post">
@@ -61,8 +72,11 @@ const Post = ({ post }) => {
                     </span>
                 </div>
             </div>
-            <MoreHorizIcon/>    
-        </div>
+            <MoreHorizIcon onClick={() => setMenuOpent(!menuOpent)} />
+          {menuOpent && post.userId === currentUser.id && (
+            <button onClick={handleDelete}>delete</button>
+          )}        
+          </div>
         <div className="content">
             <p>{post.desc}</p>
             <img src={"../upload/"+post.img} alt=""/>
