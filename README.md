@@ -38,7 +38,7 @@ Socio has the following features:
 
 ----
 
-##Login Page
+## Login Page
 
 ![image](https://github.com/minhlip/Socio-media-platform/assets/93545222/f2abff24-0a01-4348-8e89-e4876c0eb85e)
 
